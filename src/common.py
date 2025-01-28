@@ -2,7 +2,7 @@ import random
 import threading
 import os
 
-debug = True
+debug = False
 
 
 def process_core_group(group, local_pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, group_id):

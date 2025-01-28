@@ -1,30 +1,8 @@
-import numpy as np
-from src.common import process_core_group, combine_pheromone_matrices
 import socket
 import pickle
+from src.parallel import process_ant_group
 
-debug = True
-
-
-def process_ant_group(ant_group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores):
-    core_groups = np.array_split(ant_group, num_cores)
-
-    futures = []
-    updated_ant_group = []
-    pheromone_matrices = []
-
-    for i, group in enumerate(core_groups):
-        futures.append(
-            process_core_group(group, np.copy(pheromone_matrix), visibility_matrix, distance_matrix, alpha, beta, rho, i)
-        )
-
-    for group_result, pheromone_matrix_result in futures:
-        updated_ant_group.extend(group_result)
-        pheromone_matrices.append(pheromone_matrix_result)
-
-    pheromone_matrix_result = combine_pheromone_matrices(pheromone_matrices)
-
-    return ant_group, pheromone_matrix_result
+debug = False
 
 
 def handle_request(data):
@@ -39,6 +17,9 @@ def handle_request(data):
     beta = data["beta"]
     rho = data["rho"]
     num_cores = data["num_cores"]
+
+    if debug:
+        print(f"[DEBUG] num_cores: {num_cores}")
 
     group_result, pheromone_matrix_result = process_ant_group(
         group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores)
@@ -64,7 +45,7 @@ def start_server(host="192.168.43.18", port=8000):
                 print(f"Połączenie od: {addr}")
             with client_socket:
                 try:
-                    client_socket.settimeout(10)
+                    client_socket.settimeout(120)
                     data = b""
                     while True:
                         part = client_socket.recv(8192)

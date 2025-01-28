@@ -79,14 +79,14 @@ def plot_path(file_path, final_path):
 
 
 def main():
-    file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\tiny.csv"
-    num_ants = 10  # Liczba mrówek
+    file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\medium.csv"
+    num_ants = 1000  # Liczba mrówek
     generations = 2  # Graniczna liczba generacji
     alpha = 1.0  # Waga wpływu feromonów
     beta = 2.0  # Waga wpływu widoczności
     rho = 0.1  # Współczynnik parowania feromonów
     num_cores = 1  # Liczba procesorów
-    num_pc = 1  # Liczba rozproszenia
+    num_pc = 2  # Liczba rozproszenia
 
     # macierz odległości między miastami
     distance_matrix, num_cities = calculate_distance_matrix(file_path)
