@@ -5,21 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dbde80a3-eb88-4279-8713-e03f7fe2b9fd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Algorytm_mrowkowy.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ant.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/distributed.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parallel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sequential.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_process_pool.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profiling_results.prof" beforeDir="false" afterPath="$PROJECT_DIR$/profiling_results.prof" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profiling_results_par_small_100m_1000g_4c_1pc.prof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/profiling_results_sek_small_100m_1000g_4c_1pc.prof" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/common.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/distributed.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/distributed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_process_pool.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +46,7 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.test_process_pool.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -84,6 +78,9 @@
       <workItem from="1737917255282" duration="166000" />
       <workItem from="1737917473895" duration="162000" />
       <workItem from="1737917868428" duration="4047000" />
+      <workItem from="1737922010247" duration="9120000" />
+      <workItem from="1738007327777" duration="8306000" />
+      <workItem from="1738018804585" duration="6938000" />
     </task>
     <servers />
   </component>
@@ -92,6 +89,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Algorytm_mrowkowy$test_process_pool.coverage" NAME="test_process_pool Coverage Results" MODIFIED="1737917014371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Algorytm_mrowkowy$main.coverage" NAME="main Coverage Results" MODIFIED="1737921690038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Algorytm_mrowkowy$main.coverage" NAME="main Coverage Results" MODIFIED="1738025252036" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -3,18 +3,39 @@ import pickle
 import numpy as np
 from src.common import combine_pheromone_matrices
 
+debug = True
+
 
 def send_to_server(server_address, data):
+    if debug:
+        print(f"[DEBUG] Wysyłanie danych do serwera {server_address}")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(10)
         s.connect(server_address)
         s.sendall(pickle.dumps(data))
-        response = s.recv(4096)
+        if debug:
+            print("[DEBUG] Dane wysłane do serwera.")
+
+        response = b""
+        while True:
+            if debug:
+                print("[DEBUG] Oczekiwanie na dane od serwera...")
+            part = s.recv(4096)
+            if not part:
+                print("[DEBUG] Odebrano koniec danych od serwera.")
+                break
+            if debug:
+                print(f"[DEBUG] Odebrano część danych: {part}")
+            response += part
+
+        if debug:
+            print("[DEBUG] Wszystkie dane odebrane, deserializacja odpowiedzi...")
         return pickle.loads(response)
 
 
 def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, generations,
                    num_cores, num_pc):
-    servers = [("localhost", 8000), ("192.168.1.101", 8001)]
+    servers = [("192.168.43.18", 8000), ("192.168.43.150", 8001)]
     groups = np.array_split(ants, num_pc)
 
     for generation in range(generations):
@@ -36,6 +57,7 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
                 "num_cores": num_cores
             }
             result = send_to_server(server, data_to_send)
+            print(f"Serwer {server} zwrócił wynik: {result}")
 
             all_groups.append(result["group_result"])
             all_pheromone_matrices.append(result["pheromone_matrix_result"])
@@ -51,7 +73,7 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
 
 def distributed_main(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho,
                      generations, num_cores, num_pc):
-    pheromone_matrix = run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho,
-                                      generations, num_cores, num_pc)
-
+    pheromone_matrix = run_iterations(
+        ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, generations, num_cores, num_pc
+    )
     return pheromone_matrix

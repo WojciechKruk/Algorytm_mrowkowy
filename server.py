@@ -3,7 +3,7 @@ from src.common import process_core_group, combine_pheromone_matrices
 import socket
 import pickle
 
-debug = False
+debug = True
 
 
 def process_ant_group(ant_group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores):
@@ -15,8 +15,7 @@ def process_ant_group(ant_group, pheromone_matrix, visibility_matrix, distance_m
 
     for i, group in enumerate(core_groups):
         futures.append(
-            process_core_group(group, np.copy(pheromone_matrix), visibility_matrix, distance_matrix, alpha, beta,
-                               rho, i)
+            process_core_group(group, np.copy(pheromone_matrix), visibility_matrix, distance_matrix, alpha, beta, rho, i)
         )
 
     for group_result, pheromone_matrix_result in futures:
@@ -29,6 +28,9 @@ def process_ant_group(ant_group, pheromone_matrix, visibility_matrix, distance_m
 
 
 def handle_request(data):
+    if debug:
+        print("[DEBUG] Rozpoczęcie przetwarzania żądania...")
+
     group = data["group"]
     pheromone_matrix = data["pheromone_matrix"]
     visibility_matrix = data["visibility_matrix"]
@@ -41,26 +43,54 @@ def handle_request(data):
     group_result, pheromone_matrix_result = process_ant_group(
         group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores)
 
+    if debug:
+        print(f"[DEBUG] Przetwarzanie zakończone.")
+
     return {"group_result": group_result, "pheromone_matrix_result": pheromone_matrix_result}
 
 
-def start_server(host="localhost", port=8000):
+def start_server(host="192.168.43.18", port=8000):
+    if debug:
+        print("[DEBUG] Uruchamianie serwera...")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((host, port))
         server_socket.listen()
-        print(f"Serwer uruchomiony na {host}:{port}")
+        if debug:
+            print(f"Serwer uruchomiony na {host}:{port}")
 
         while True:
             client_socket, addr = server_socket.accept()
-            print(f"Połączenie od: {addr}")
+            if debug:
+                print(f"Połączenie od: {addr}")
             with client_socket:
-                data = client_socket.recv(4096)
-                if not data:
-                    break
-                received_data = pickle.loads(data)
-                result = handle_request(received_data)
-                client_socket.sendall(pickle.dumps(result))
+                try:
+                    data = b""
+                    while True:
+                        part = client_socket.recv(8192)
+                        if not part:
+                            break
+                        data += part
+
+                    if not data:
+                        print("[ERROR] Otrzymano pusty pakiet.")
+                        continue
+
+                    if debug:
+                        print(f"[DEBUG] Odebrano dane od klienta: {pickle.loads(data)}")
+
+                    received_data = pickle.loads(data)
+                    result = handle_request(received_data)
+
+                    if debug:
+                        print(f"[DEBUG] Wysyłanie odpowiedzi do klienta...")
+                    response = pickle.dumps(result)
+                    client_socket.sendall(response)
+
+                    if debug:
+                        print("[DEBUG] Odpowiedź wysłana.")
+                except Exception as e:
+                    print(f"[ERROR] Błąd podczas obsługi połączenia: {e}")
 
 
 if __name__ == "__main__":
-    start_server(host="localhost", port=8000)
+    start_server(host="192.168.43.18", port=8000)

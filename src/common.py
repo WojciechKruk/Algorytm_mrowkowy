@@ -1,13 +1,13 @@
 import random
-# import threading
-# import os
+import threading
+import os
 
-debug = False
+debug = True
 
 
 def process_core_group(group, local_pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, group_id):
-    # if debug:
-    #     print(f"[DEBUG] Start przetwarzania grupy {group_id + 1}. Proces ID: {os.getpid()}, Wątek: {threading.get_ident()}")
+    if debug:
+        print(f"[DEBUG] Start przetwarzania grupy {group_id + 1}. Proces ID: {os.getpid()}, Wątek: {threading.get_ident()}")
 
     local_updated_group = []
 
