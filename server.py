@@ -64,6 +64,7 @@ def start_server(host="192.168.43.18", port=8000):
                 print(f"Połączenie od: {addr}")
             with client_socket:
                 try:
+                    client_socket.settimeout(10)
                     data = b""
                     while True:
                         part = client_socket.recv(8192)
@@ -76,18 +77,20 @@ def start_server(host="192.168.43.18", port=8000):
                         continue
 
                     if debug:
-                        print(f"[DEBUG] Odebrano dane od klienta: {pickle.loads(data)}")
+                        print(f"[DEBUG] Odebrano dane od klienta.")
 
                     received_data = pickle.loads(data)
                     result = handle_request(received_data)
 
                     if debug:
                         print(f"[DEBUG] Wysyłanie odpowiedzi do klienta...")
-                    response = pickle.dumps(result)
-                    client_socket.sendall(response)
+                    client_socket.sendall(pickle.dumps(result))
 
                     if debug:
                         print("[DEBUG] Odpowiedź wysłana.")
+
+                except socket.timeout:
+                    print("[SERWER] Odbieranie danych zakończone z powodu przekroczenia czasu.")
                 except Exception as e:
                     print(f"[ERROR] Błąd podczas obsługi połączenia: {e}")
 

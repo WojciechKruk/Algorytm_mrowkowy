@@ -5,9 +5,12 @@ from src.sequential import sequential_main
 from src.parallel import parallel_main
 from src.distributed import distributed_main
 import matplotlib
+from server import start_server
+import threading
 
 matplotlib.use('TkAgg')
 debug = False
+mode = 3  # Tryb algorytmu 1-Sekwencyjny 2-równoległy 3-rozproszony
 
 
 def calculate_distance_matrix(file_path):
@@ -76,15 +79,14 @@ def plot_path(file_path, final_path):
 
 
 def main():
-    file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\large.csv"
-    num_ants = 100  # Liczba mrówek
+    file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\tiny.csv"
+    num_ants = 10  # Liczba mrówek
     generations = 2  # Graniczna liczba generacji
     alpha = 1.0  # Waga wpływu feromonów
     beta = 2.0  # Waga wpływu widoczności
     rho = 0.1  # Współczynnik parowania feromonów
     num_cores = 1  # Liczba procesorów
     num_pc = 1  # Liczba rozproszenia
-    mode = 1  # Tryb algorytmu 1-Sekwencyjny 2-równoległy 3-rozproszony
 
     # macierz odległości między miastami
     distance_matrix, num_cities = calculate_distance_matrix(file_path)
@@ -124,7 +126,11 @@ def main():
 if __name__ == "__main__":
     from multiprocessing import set_start_method
 
-    set_start_method("spawn", force=True)
+    if mode == 3:
+        set_start_method("spawn", force=True)
+        threading.Thread(target=start_server, args=("192.168.43.18", 8000), daemon=True).start()
+        import time
+        time.sleep(1)
 
     import cProfile
     import pstats

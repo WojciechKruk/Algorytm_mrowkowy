@@ -16,6 +16,8 @@ def send_to_server(server_address, data):
         if debug:
             print("[DEBUG] Dane wysłane do serwera.")
 
+        s.shutdown(socket.SHUT_WR)
+
         response = b""
         while True:
             if debug:
@@ -25,7 +27,7 @@ def send_to_server(server_address, data):
                 print("[DEBUG] Odebrano koniec danych od serwera.")
                 break
             if debug:
-                print(f"[DEBUG] Odebrano część danych: {part}")
+                print(f"[DEBUG] Odebrano część danych od serwera")
             response += part
 
         if debug:
@@ -36,6 +38,7 @@ def send_to_server(server_address, data):
 def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, generations,
                    num_cores, num_pc):
     servers = [("192.168.43.18", 8000), ("192.168.43.150", 8001)]
+
     groups = np.array_split(ants, num_pc)
 
     for generation in range(generations):
@@ -57,7 +60,7 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
                 "num_cores": num_cores
             }
             result = send_to_server(server, data_to_send)
-            print(f"Serwer {server} zwrócił wynik: {result}")
+            print(f"Serwer {server} zwrócił wynik.")
 
             all_groups.append(result["group_result"])
             all_pheromone_matrices.append(result["pheromone_matrix_result"])
