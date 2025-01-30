@@ -2,7 +2,7 @@ import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 from src.common import process_core_group, combine_pheromone_matrices
 
-debug = False
+debug = True
 
 
 def process_ant_group(ant_group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores):

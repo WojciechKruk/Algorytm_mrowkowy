@@ -3,8 +3,9 @@ import pickle
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 from src.common import combine_pheromone_matrices
+# import zlib
 
-debug = True
+debug = False
 
 
 def send_to_server(server_address, data):
@@ -21,15 +22,11 @@ def send_to_server(server_address, data):
 
         response = b""
         while True:
-            if debug:
-                print("[DEBUG] Oczekiwanie na dane od serwera...")
             part = s.recv(8192)
             if not part:
                 if debug:
                     print("[DEBUG] Odebrano koniec danych od serwera.")
                 break
-            if debug:
-                print(f"[DEBUG] Odebrano część danych od serwera")
             response += part
 
         if debug:
@@ -43,7 +40,8 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
     server_cores = {"192.168.43.18": 6, "192.168.43.150": 4}
 
     if num_pc == 2:
-        groups = np.split(ants, [int(len(ants) * server_cores["192.168.43.18"] / sum(server_cores.values()))])
+        # groups = np.split(ants, [int(len(ants) * server_cores["192.168.43.18"] / sum(server_cores.values()))])
+        groups = np.split(ants, [int(len(ants) * 0.8)])
     else:
         groups = np.array_split(ants, num_pc)
 
@@ -53,8 +51,6 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
         elif num_pc == 2:
             print(f"group size of group 1: {len(groups[0])}")
             print(f"group size of group 2: {len(groups[1])}")
-
-    groups = np.array_split(ants, num_pc)
 
     for generation in range(generations):
         if debug:
@@ -98,7 +94,6 @@ def run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, a
 
 def distributed_main(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho,
                      generations, num_cores, num_pc):
-    pheromone_matrix = run_iterations(
-        ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, generations, num_cores, num_pc
-    )
+    pheromone_matrix = run_iterations(ants, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho,
+                                      generations, num_cores, num_pc)
     return pheromone_matrix

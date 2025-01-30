@@ -1,6 +1,7 @@
 import socket
 import pickle
 from src.parallel import process_ant_group
+# import zlib
 
 debug = False
 
@@ -21,8 +22,8 @@ def handle_request(data):
     if debug:
         print(f"[DEBUG] num_cores: {num_cores}")
 
-    group_result, pheromone_matrix_result = process_ant_group(
-        group, pheromone_matrix, visibility_matrix, distance_matrix, alpha, beta, rho, num_cores)
+    group_result, pheromone_matrix_result = process_ant_group(group, pheromone_matrix, visibility_matrix,
+                                                              distance_matrix, alpha, beta, rho, num_cores)
 
     if debug:
         print(f"[DEBUG] Przetwarzanie zakończone.")

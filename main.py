@@ -7,10 +7,21 @@ from src.distributed import distributed_main
 import matplotlib
 from server import start_server
 import threading
+import time
+import csv
 
 matplotlib.use('TkAgg')
 debug = False
-mode = 3  # Tryb algorytmu 1-Sekwencyjny 2-równoległy 3-rozproszony
+g_file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\600c.csv"
+g_num_ants = 600  # Liczba mrówek
+g_num_cities = 0  # Liczba miast (uzupełniana automatycznie)
+g_generations = 2  # Liczba generacji
+g_alpha = 1.0  # Waga wpływu feromonów
+g_beta = 2.0  # Waga wpływu widoczności
+g_rho = 0.1  # Współczynnik parowania feromonów
+g_num_cores = 1  # Liczba procesorów
+g_num_pc = 1  # Liczba rozproszenia
+g_mode = 1  # Tryb algorytmu 1-Sekwencyjny 2-równoległy 3-rozproszony
 
 
 def calculate_distance_matrix(file_path):
@@ -78,16 +89,7 @@ def plot_path(file_path, final_path):
     plt.show()
 
 
-def main():
-    file_path = r"C:\Users\krukw\PycharmProjects\Algorytm_mrowkowy\data\medium.csv"
-    num_ants = 1000  # Liczba mrówek
-    generations = 2  # Graniczna liczba generacji
-    alpha = 1.0  # Waga wpływu feromonów
-    beta = 2.0  # Waga wpływu widoczności
-    rho = 0.1  # Współczynnik parowania feromonów
-    num_cores = 1  # Liczba procesorów
-    num_pc = 2  # Liczba rozproszenia
-
+def main(file_path, num_ants, generations, alpha, beta, rho, num_cores, num_pc, mode):
     # macierz odległości między miastami
     distance_matrix, num_cities = calculate_distance_matrix(file_path)
 
@@ -122,14 +124,15 @@ def main():
         print(f"\ncałkowity koszt: {total_cost}")
         plot_path(file_path, final_path)
 
+    return num_cities
+
 
 if __name__ == "__main__":
     from multiprocessing import set_start_method
 
-    if mode == 3:
+    if g_mode == 3:
         set_start_method("spawn", force=True)
         threading.Thread(target=start_server, args=("192.168.43.18", 8000), daemon=True).start()
-        import time
         time.sleep(1)
 
     import cProfile
@@ -138,11 +141,24 @@ if __name__ == "__main__":
     profiler = cProfile.Profile()
     profiler.enable()
 
-    main()
+    start_time = time.time()
+    g_num_cities = main(g_file_path, g_num_ants, g_generations, g_alpha, g_beta, g_rho, g_num_cores, g_num_pc, g_mode)
+    end_time = time.time()
+    main_time = end_time - start_time
 
     profiler.disable()
     stats = pstats.Stats(profiler)
     stats.strip_dirs()
     stats.sort_stats("cumulative")
     stats.dump_stats("profiling_results.prof")  # Wyświetl: snakeviz profiling_results.prof
-    stats.print_stats(20)
+    stats.print_stats(1)                        # (przykład: profiling_results_1.prof)
+
+    csv_file = "profiling_results.csv"
+    with open(csv_file, mode="a", newline="") as file:
+        writer = csv.writer(file, delimiter=";")
+        writer.writerow([g_mode, g_num_cities, g_num_ants, g_generations, g_num_cores, g_num_pc, main_time])
+
+    # start_time = time.time()
+    # end_time = time.time()
+    # execution_time = end_time - start_time
+    # print(f"Czas wykonania: {execution_time:.6f} sekund")
